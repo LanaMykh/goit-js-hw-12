@@ -3,6 +3,10 @@
 body {
   line-height: 1.4;
   color: #2a2a2a;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 h1,

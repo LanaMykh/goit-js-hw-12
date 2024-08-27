@@ -1,47 +1,44 @@
+import { createGalleryCard } from './js/render-functions.js';
+import { fetchImage } from './js/pixabay-api.js';
 import iziToast from "izitoast";
 import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const formSearch = document.querySelector(".search-form");
-console.log(formSearch);
-
 const gallery = document.querySelector(".gallery");
+const loader = document.querySelector(".loader");
 
-const keyAPI = "45640148-48faf1be46dd1becbe9886964";
-const URL = "https://pixabay.com/api/";
-
-const createGalleryCard = ({webformatURL,largeImageURL,tags,likes, views,comments ,downloads}) => {
-  return `
-      <li class="gallery-item">
-      <a class="gallery-link" href="${largeImageURL}">
-        <img
-          class="gallery-image"
-          src="${webformatURL}"
-          alt="${tags}"
-        />
-      </a>
-    </li>
-  `;
-};
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 const onSearchFormSubmit = event => {
-    event.preventDefault();
-
+  event.preventDefault();
+  
+    loader.style.display = 'inline-block';
+  
     const searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
 
-    fetch(`${URL}?key=${keyAPI}&q=${searchedValue}`)
-        .then(respponse => {
-            if (!respponse.ok) {
-                throw new Error(respponse.status);
-            }
-            return respponse.json();
-         }
-        )
+    fetchImage(searchedValue)
         .then(data => {
 
-            console.log(data);
+            if (data.hits.length === 0) {
+              iziToast.error({
+                message:
+                  'Sorry, there are no images matching your search query. Please try again!',
+                position: 'topRight',
+              });
+              loader.style.display = 'none';
+              gallery.innerHTML = '';
+              formSearch.reset();
+              return;
+             };
             const galleryCards = data.hits.map(cardDetails => createGalleryCard(cardDetails)).join('');
 
-            gallery.innerHTML = galleryCards;
+          gallery.innerHTML = galleryCards;
+          loader.style.display = 'none';
+          lightbox.refresh();
         
         })
         .catch(err => {
@@ -50,9 +47,3 @@ const onSearchFormSubmit = event => {
 };
 
 formSearch.addEventListener('submit', onSearchFormSubmit);
-
-const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',       // Використовуємо атрибут alt для підписів
-    captionDelay: 250,         // Затримка перед показом підпису
-    captionPosition: 'bottom'  // Позиція підпису знизу
-});
