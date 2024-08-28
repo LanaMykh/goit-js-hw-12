@@ -14,36 +14,36 @@ const lightbox = new SimpleLightbox('.gallery a', {
 });
 
 const onSearchFormSubmit = event => {
+  
   event.preventDefault();
-  
-    loader.style.display = 'inline-block';
-  
-    const searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
+  gallery.innerHTML = '';
+  loader.style.display = 'inline-block';
+    
+  const searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
 
-    fetchImage(searchedValue)
-        .then(data => {
-
-            if (data.hits.length === 0) {
-              iziToast.error({
-                message:
-                  'Sorry, there are no images matching your search query. Please try again!',
-                position: 'topRight',
-              });
-              loader.style.display = 'none';
-              gallery.innerHTML = '';
-              formSearch.reset();
-              return;
-             };
-            const galleryCards = data.hits.map(cardDetails => createGalleryCard(cardDetails)).join('');
-
-          gallery.innerHTML = galleryCards;
-          loader.style.display = 'none';
-          lightbox.refresh();
-        
-        })
-        .catch(err => {
-            console.log(err);
+  fetchImage(searchedValue)
+    .then(data => {
+      if (data.hits.length === 0) {
+        iziToast.error({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          position: 'topRight',
         });
+        loader.style.display = 'none';
+        gallery.innerHTML = '';
+        formSearch.reset();
+        return;
+      };
+      const galleryCards = data.hits.map(cardDetails => createGalleryCard(cardDetails)).join('');
+
+      gallery.innerHTML = galleryCards;
+      loader.style.display = 'none';
+      lightbox.refresh();
+        
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 formSearch.addEventListener('submit', onSearchFormSubmit);
