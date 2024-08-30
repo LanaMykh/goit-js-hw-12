@@ -116,6 +116,7 @@
     animation: rotation 2s linear infinite;
     align-items: center;
     margin-left: 45%;
+    margin-top: 10px;
 }
 
 .loader::after {
