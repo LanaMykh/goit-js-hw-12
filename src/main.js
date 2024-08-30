@@ -13,37 +13,46 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
-const onSearchFormSubmit = event => {
-  
-  event.preventDefault();
-  gallery.innerHTML = '';
-  loader.style.display = 'inline-block';
-    
-  const searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
+let page = 1;
+let searchedValue = "";
 
-  fetchImage(searchedValue)
-    .then(data => {
-      if (data.hits.length === 0) {
-        iziToast.error({
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
+const onSearchFormSubmit = async event => {
+  
+  try {
+    event.preventDefault();
+    gallery.innerHTML = '';
+    loader.style.display = 'inline-block';
+    
+    const searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
+        
+    const data = await fetchImage(searchedValue, page);
+      
+    if (data.hits.length === 0) {
+      iziToast.error({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+      });
+      loader.style.display = 'none';
+      gallery.innerHTML = '';
+      formSearch.reset();
+      return;
+    };
+      
+    const galleryCards = data.hits.map(cardDetails => createGalleryCard(cardDetails)).join('');
+      
+    gallery.innerHTML = galleryCards;
+    loader.style.display = 'none';
+    lightbox.refresh();
+        
+    }
+  catch (err) {
+    iziToast.error({
+          message: err.message,
           position: 'topRight',
         });
-        loader.style.display = 'none';
-        gallery.innerHTML = '';
-        formSearch.reset();
-        return;
-      };
-      const galleryCards = data.hits.map(cardDetails => createGalleryCard(cardDetails)).join('');
-
-      gallery.innerHTML = galleryCards;
-      loader.style.display = 'none';
-      lightbox.refresh();
-        
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  };
 };
+
 
 formSearch.addEventListener('submit', onSearchFormSubmit);
