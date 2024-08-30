@@ -25,6 +25,7 @@ const onSearchFormSubmit = async event => {
     event.preventDefault();
     gallery.innerHTML = '';
     currentPage = 1;
+    loadMoreBtn.classList.add('is-hidden');
     loader.style.display = 'inline-block';
     
     searchedValue = formSearch.elements.user_query.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ").split(" ").join("+");
