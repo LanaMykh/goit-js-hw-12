@@ -9,6 +9,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 16px;
+    margin-bottom: 44px;
 }
 
 .search-form {
@@ -26,15 +27,33 @@
     border: 1px solid #303030;
 }
 
-.search-btn {
+.search-btn,
+.load-more {
     font-size: 14px;
     padding: 10px 20px;
-    background-color: #2ecc71;
+    background-color: #4e75ff;
     color: #ffffff;
     border: none;
     text-transform: uppercase;
     cursor: pointer;
     margin-left: 10px;
+}
+
+.load-more {
+    display: block;
+    margin: 20px auto 0 auto;
+    transition: opacity 250ms linear;
+}
+
+.search-btn:hover,
+.search-btn:focus,
+.load-more:hover,
+.load-more:focus {
+    opacity: 0.8;
+}
+
+.load-more.is-hidden {
+    display: none;
 }
 
 .gallery {
@@ -50,7 +69,7 @@
 
 .gallery-image {
     width: 100%;
-    max-height: 200px;
+    height: 200px;
     object-fit: cover;
 
 }

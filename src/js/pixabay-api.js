@@ -4,7 +4,7 @@ const keyAPI = "45640148-48faf1be46dd1becbe9886964";
 
 axios.defaults.baseURL = "https://pixabay.com";
 
-export const fetchImage = async (searchedValue, page) => {
+export const fetchImage = async (searchedValue, currentPage) => {
   const axiosOptions = {
     params: {
       key: keyAPI,
@@ -12,7 +12,7 @@ export const fetchImage = async (searchedValue, page) => {
       image_type: 'photo',
       safesearch: 'true',
       per_page: 15,
-      page: page,
+      page: currentPage,
       q: searchedValue,
     }
   };
