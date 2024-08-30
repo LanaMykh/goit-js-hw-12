@@ -1,4 +1,4 @@
-# goit-js-hw-11
+# goit-js-hw-12
 # Vanilla App Template
 
 Цей проект було створено за допомогою Vite. Для знайомства та налаштування
